@@ -1,2 +1,1 @@
 # Jenkins Golang SDK
-# JenkinsGo
