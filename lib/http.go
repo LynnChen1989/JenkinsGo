@@ -7,8 +7,7 @@ import (
 	"io/ioutil"
 )
 
-func httpGet(url string, header map[string]string) (content string) {
-
+func HttpGet(url string, header map[string]string) (content string) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
