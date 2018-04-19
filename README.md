@@ -11,8 +11,9 @@
 #### notice    
     Pls. decare two variables JENKINS_API_TOKEN, JENKINS_HOST
 
-    JENKINS_API_TOKEN format,  "[username]:[token]"
-    JENKINS_HOST format, "[HOST]:[PORT]"
+    JENKINS_API_USER, username
+    JENKINS_API_TOKEN, user token
+    JENKINS_HOST, "[HOST]:[PORT]"
     
 #### how to get user token from jenkins ?
     http://127.0.0.1:8080/securityRealm/user/{YOU_NAME}/configure

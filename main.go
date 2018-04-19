@@ -8,11 +8,10 @@ import (
 
 func main() {
 	api := jenkins.API{
+		JenkinsUser: os.Getenv("JENKINS_API_USER"),
 		JenkinsToken: os.Getenv("JENKINS_API_TOKEN"),
 		JenkinsHost:  os.Getenv("JENKINS_HOST"),
 	}
-	data, _ := api.GetJobTaskByName("628", "628_compile")
-	fmt.Println(data["job"])
-	fmt.Println(data["task"].(jenkins.TaskDetail))
-
+	data, _ := api.GetJobs()
+	fmt.Println(data)
 }

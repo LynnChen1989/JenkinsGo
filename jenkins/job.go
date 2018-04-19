@@ -16,21 +16,28 @@ type JenkinsItems struct {
 }
 
 // Get list of job's url
-func GetJobUrl(token string, host string) (url string) {
-	url = "http://" + token + "@" + host + "/api/json?pretty=true"
+func GetJobUrl(host string) (url string) {
+	url = "http://" + host + "/api/json?pretty=true"
 	return
 }
 
 // Get all jobs of current user
 func (api *API) GetJobs() (items []ItemDetail, err error) {
-	url := GetJobUrl(api.JenkinsToken, api.JenkinsHost)
-	api.Printf("request job url: %s", url)
+	url := GetJobUrl(api.JenkinsHost)
+	lib.Info.Printf("request job url: %s", url)
 	header := map[string]string{}
-	data := lib.HttpGet(url, header)
+	//data := lib.HttpGet(url, header)
+	call := lib.Call{
+		Url:      url,
+		Header:   header,
+		Username: api.JenkinsUser,
+		Password: api.JenkinsToken,
+	}
+	call.HttpGet()
 	var jobs JenkinsItems
-	err = json.Unmarshal([]byte(data), &jobs)
+	err = json.Unmarshal([]byte(call.ReturnData), &jobs)
 	if err != nil {
-		api.Printf("Error: %s", err)
+		lib.Error.Printf("Error: %s", err)
 	}
 	items = jobs.Jobs
 	return
@@ -40,7 +47,7 @@ func (api *API) GetJobs() (items []ItemDetail, err error) {
 func (api *API) GetJobByName(name string) (job map[string]string, err error) {
 	items, err := api.GetJobs()
 	if err != nil {
-		api.Printf("Error: %s", err)
+		lib.Error.Printf("Error: %s", err)
 	}
 	for _, v := range items {
 		if v.Name == name {

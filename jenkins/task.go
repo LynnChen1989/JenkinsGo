@@ -17,21 +17,27 @@ type TaskItems struct {
 }
 
 // Get job task url
-func GetTaskUrl(token string, host string, job string) (url string) {
-	url = "http://" + token + "@" + host + "/job/" + job + "/api/json?pretty=true"
+func GetTaskUrl(host string, job string) (url string) {
+	url = "http://" + host + "/job/" + job + "/api/json?pretty=true"
 	return
 }
 
 // Get one job's task list, require args job name
 func (api *API) GetJobTasks(name string) (tasks []TaskDetail, err error) {
-	url := GetTaskUrl(api.JenkinsToken, api.JenkinsHost, name)
-	api.Printf("request task url: %s", url)
+	url := GetTaskUrl(api.JenkinsHost, name)
+	lib.Info.Printf("request task url: %s", url)
 	header := map[string]string{}
-	data := lib.HttpGet(url, header)
+	call := lib.Call{
+		Url:      url,
+		Header:   header,
+		Username: api.JenkinsUser,
+		Password: api.JenkinsToken,
+	}
+	call.HttpGet()
 	var ti TaskItems
-	err = json.Unmarshal([]byte(data), &ti)
+	err = json.Unmarshal([]byte(call.ReturnData), &ti)
 	if err != nil {
-		api.Printf("Error: %s", err)
+		lib.Error.Printf("Error: %s", err)
 	}
 	tasks = ti.Tasks
 	return
