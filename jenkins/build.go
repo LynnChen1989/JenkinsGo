@@ -19,3 +19,6 @@ func (api *API) CancelBuildFromQueue()  {
 
 }
 
+func (api *API) GetBuildByNumber()  {
+
+}

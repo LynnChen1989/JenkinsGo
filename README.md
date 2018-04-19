@@ -25,7 +25,9 @@
 #### prescriptive
     when you read document from godoc.
     job, means user view job list;
-    task, means when you click one job, you can get a list of current job;
+    task, means subjob;
+    
+**So, this SDK just support two layer job layout. if you have more layer, this sdk not work well**
        
 #### install godoc
     go get -u golang.org/x/tools/cmd/godoc
