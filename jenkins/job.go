@@ -15,11 +15,13 @@ type JenkinsItems struct {
 	Jobs []ItemDetail `json:"jobs"`
 }
 
+//
 func GetJobUrl(token string, host string) (url string) {
 	url = "http://" + token + "@" + host + "/api/json?pretty=true"
 	return
 }
 
+// 获取用户视图下的所有job
 func (api *API) GetJobs() (items []ItemDetail, err error) {
 	url := GetJobUrl(api.JenkinsToken, api.JenkinsHost)
 	api.Printf("request job url: %s", url)

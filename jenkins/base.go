@@ -1,3 +1,4 @@
+// Jenkins Golang SDK
 package jenkins
 
 import (

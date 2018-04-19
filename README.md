@@ -1,31 +1,34 @@
 # Jenkins Golang SDK
 
 
-## 环境变量
+## Environment
 
     JENKINS_API_TOKEN="snake:19505d43c11ebc773b5689d9029f54d3"
     JENKINS_HOST="127.0.0.1:8080"
     
-## 使用说明
+## Usage
+
+#### notice    
+    Pls. decare two variables JENKINS_API_TOKEN, JENKINS_HOST
+
+    JENKINS_API_TOKEN format,  "[username]:[token]"
+    JENKINS_HOST format, "[HOST]:[PORT]"
     
-    使用前请先申明JENKINS_API_TOKEN和JENKINS_HOST两个环境变量, 用于提供jenkins的url和用户认证信息
-    
-    获取jenkins的token使用如下链接：
+#### how to get user token from jenkins ?
     http://127.0.0.1:8080/securityRealm/user/{YOU_NAME}/configure
     
-    YOU_NAME替换为你的用户名
+    YOU_NAME replace your real name.
     
     
-## 方法说明
+## Document
+   
+#### install godoc
+    go get -u golang.org/x/tools/cmd/godoc
     
-#### GetJobs
-    获取到当前用户视图下的所有配置的job列表
-    
-#### GetJobByName
-    根据提供的job名，获取任务的信息
-    
-#### GetJobs
-    获取某个job下所有的task信息
-    
-#### GetJobByName
-    获取某个job下某个task的信息
+#### run godoc 
+    ./bin/godoc.exe -http 127.0.0.1:9999 -play -goroot ./src/
+
+#### read document
+    if you run godoc, you can view document of JenkinsGo via:
+
+    http://127.0.0.1:9999/pkg/jenkins
