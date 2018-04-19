@@ -16,13 +16,14 @@ type TaskItems struct {
 	Tasks    []TaskDetail `json:"jobs"`
 }
 
+// Get job task url
 func GetTaskUrl(token string, host string, job string) (url string) {
 	url = "http://" + token + "@" + host + "/job/" + job + "/api/json?pretty=true"
 	return
 }
 
+// Get one job's task list, require args job name
 func (api *API) GetJobTasks(name string) (tasks []TaskDetail, err error) {
-	// Get one job's task list, require args job name
 	url := GetTaskUrl(api.JenkinsToken, api.JenkinsHost, name)
 	api.Printf("request task url: %s", url)
 	header := map[string]string{}
@@ -36,6 +37,8 @@ func (api *API) GetJobTasks(name string) (tasks []TaskDetail, err error) {
 	return
 }
 
+
+// Get jobs's task, require args, job name, task name
 func (api *API) GetJobTaskByName(jobName string, taskName string) (jt map[string]interface{}, err error) {
 	/*
 	Get jobs's task, require args, job name, task name, jt means: job task

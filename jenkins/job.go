@@ -11,17 +11,17 @@ type ItemDetail struct {
 }
 
 type JenkinsItems struct {
-	// 知识点，接收json的是jobs，不是Items, 也就是说是flag的名称和json的字段名称对应即可
+	// point，received json filed id `jobs` not `Items`, you can just assign flag as `jobs`, not `items`
 	Jobs []ItemDetail `json:"jobs"`
 }
 
-//
+// Get list of job's url
 func GetJobUrl(token string, host string) (url string) {
 	url = "http://" + token + "@" + host + "/api/json?pretty=true"
 	return
 }
 
-// 获取用户视图下的所有job
+// Get all jobs of current user
 func (api *API) GetJobs() (items []ItemDetail, err error) {
 	url := GetJobUrl(api.JenkinsToken, api.JenkinsHost)
 	api.Printf("request job url: %s", url)
@@ -36,6 +36,7 @@ func (api *API) GetJobs() (items []ItemDetail, err error) {
 	return
 }
 
+// Get one job of current user, filter by job name, if you have duplicate job name, just return last one
 func (api *API) GetJobByName(name string) (job map[string]string, err error) {
 	items, err := api.GetJobs()
 	if err != nil {
