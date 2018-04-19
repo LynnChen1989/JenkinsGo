@@ -37,7 +37,6 @@ func (api *API) GetJobTasks(name string) (tasks []TaskDetail, err error) {
 	return
 }
 
-
 // Get jobs's task, require args, job name, task name
 func (api *API) GetJobTaskByName(jobName string, taskName string) (jt map[string]interface{}, err error) {
 	/*
@@ -60,4 +59,15 @@ func (api *API) GetJobTaskByName(jobName string, taskName string) (jt map[string
 		}
 	}
 	return
+}
+
+// Disable specified task
+
+func (api *API) DisableTask(name string) {
+
+}
+
+// Enable specified task
+func (api *API) EnableTask(name string) {
+
 }

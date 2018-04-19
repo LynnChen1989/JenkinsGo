@@ -25,11 +25,15 @@ func HttpGet(url string, header map[string]string) (content string) {
 		fmt.Println("cookie:", cookie)
 	}
 
-	body, err:=ioutil.ReadAll(response.Body)
+	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		fmt.Println("Get response error", err)
 		os.Exit(0)
 	}
 	content = string(body)
 	return
+}
+
+func httpPost(url string, header map[string]string) {
+
 }
