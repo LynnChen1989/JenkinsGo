@@ -59,7 +59,6 @@ func (call *Call) HttpPost() {
 		postData, _ := json.Marshal(call.PostData)
 		jsonStr = []byte(postData)
 	}
-
 	Info.Println("post data: ", bytes.NewBuffer(jsonStr))
 	req, err := http.NewRequest("POST", call.Url, bytes.NewBuffer(jsonStr))
 
@@ -70,7 +69,7 @@ func (call *Call) HttpPost() {
 	for key, value := range call.Header {
 		req.Header.Add(key, value)
 	}
-	req.Header.Add("Content-Type", "application/json")
+	//req.Header.Add("Content-Type", "application/json")
 	if len(call.Username) > 0 && len(call.Password) > 0 {
 		Info.Println("you have specified username and password, seting basic auth")
 		req.SetBasicAuth(call.Username, call.Password)

@@ -33,43 +33,51 @@ func (api *API) GetPostParas(args map[string]string) (parameters Parameters) {
 	}
 	return
 }
+
 // get job task build url
-func (api *API) GetBuildUrl(jobName string, taskName string) (url string) {
+func (api *API) GetBuildUrl(jobName string, taskName string, withParameters bool) (url string) {
 	jobTask, _ := api.GetJobTaskByName(jobName, taskName)
 	task := jobTask["task"]
 	if task == nil {
 		lib.Error.Printf("job:%s,task:%s can not get task url", jobName, taskName)
 		panic("exit")
 	}
-	url = task.(TaskDetail).Url + "build"
+	if withParameters == true {
+		url = task.(TaskDetail).Url + "buildWithParameters"
+	} else {
+		url = task.(TaskDetail).Url + "build"
+
+	}
+	return
+}
+
+// warp build url when you call as: http://snake.ops.dragonest.com:8080/job/snake/job/fuck_args/buildWithParameters
+func (api *API) WrapBuildWithParametersUrl(jobName string, taskName string, parameters map[string]string) (url string) {
+	url = api.GetBuildUrl(jobName, taskName, true)
+	var argsString string
+	argsString += "/?"
+	for k, v := range parameters {
+		argsString += k + "=" + v + "&"
+	}
+	url += argsString
 	return
 }
 
 // start build a job
 func (api *API) StartBuild(jobName string, taskName string, args ...interface{}) (content string) {
-	url := api.GetBuildUrl(jobName, taskName)
+	url := api.GetBuildUrl(jobName, taskName, false)
 	lib.Info.Printf("request build url: %s", url)
 	header := map[string]string{}
-	call := lib.Call{
-		Url:      url,
-		Header:   header,
-		Username: api.JenkinsUser,
-		Password: api.JenkinsToken,
-	}
-	/*
-		如果是带参数的build， 那么需要传递对应的参数进去， jenkins build的参数格式很固定
-		{"parameter":[{"name":"name", "value":"chenlin"}, {"name":"age", "value":28}, {"name":"sex", "value":"male"}]}
-	*/
-	for _, arg := range args {
-		switch arg.(type) {
-		case Parameters:
-			call.PostData = args
-		default:
-			lib.Error.Printf("I dont kown what fuck type.\n")
-		}
-	}
-	call.HttpPost()
-	content = call.ReturnData
+	content = api.ApiCall(url, "POST", header, args)
+	return
+}
+
+func (api *API) StartBuildWithParameters(jobName string, taskName string, parameters map[string]string) (content string) {
+	// StartBuild()是实现带参数build的一种方式，这是另一种方式
+	url := api.WrapBuildWithParametersUrl(jobName, taskName, parameters)
+	lib.Info.Printf("request build with parameters url: %s", url)
+	header := map[string]string{}
+	content = api.ApiCall(url, "POST", header)
 	return
 }
 

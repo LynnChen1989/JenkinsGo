@@ -27,15 +27,9 @@ func (api *API) GetJobTasks(name string) (tasks []TaskDetail, err error) {
 	url := GetTaskUrl(api.JenkinsHost, name)
 	lib.Info.Printf("request task url: %s", url)
 	header := map[string]string{}
-	call := lib.Call{
-		Url:      url,
-		Header:   header,
-		Username: api.JenkinsUser,
-		Password: api.JenkinsToken,
-	}
-	call.HttpGet()
+	returnData := api.ApiCall(url, "GET", header)
 	var ti TaskItems
-	err = json.Unmarshal([]byte(call.ReturnData), &ti)
+	err = json.Unmarshal([]byte(returnData), &ti)
 	if err != nil {
 		lib.Error.Printf("Error: %s", err)
 	}

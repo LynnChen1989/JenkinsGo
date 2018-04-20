@@ -40,3 +40,13 @@
     if you run godoc, you can view document of JenkinsGo via:
 
     http://127.0.0.1:9999/pkg/jenkins
+    
+    
+# Use case
+
+### 1、get job list, 获取job列表
+### 2、get job by name, 根据名称获取job
+### 3、get task list, 获取task列表
+### 4、get task by name, 根据名称获取task
+### 5、build, 构建task
+### 6、build with parameters, 带参数构建

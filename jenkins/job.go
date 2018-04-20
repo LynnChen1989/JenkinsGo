@@ -26,16 +26,9 @@ func (api *API) GetJobs() (items []ItemDetail, err error) {
 	url := GetJobUrl(api.JenkinsHost)
 	lib.Info.Printf("request job url: %s", url)
 	header := map[string]string{}
-	//data := lib.HttpGet(url, header)
-	call := lib.Call{
-		Url:      url,
-		Header:   header,
-		Username: api.JenkinsUser,
-		Password: api.JenkinsToken,
-	}
-	call.HttpGet()
+	returnData := api.ApiCall(url, "GET", header)
 	var jobs JenkinsItems
-	err = json.Unmarshal([]byte(call.ReturnData), &jobs)
+	err = json.Unmarshal([]byte(returnData), &jobs)
 	if err != nil {
 		lib.Error.Printf("Error: %s", err)
 	}
