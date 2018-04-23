@@ -27,9 +27,9 @@ func (api *API) GetJobTasks(name string) (tasks []TaskDetail, err error) {
 	url := GetTaskUrl(api.JenkinsHost, name)
 	lib.Info.Printf("request task url: %s", url)
 	header := map[string]string{}
-	returnData := api.ApiCall(url, "GET", header)
+	api.ApiCall(url, "GET", header)
 	var ti TaskItems
-	err = json.Unmarshal([]byte(returnData), &ti)
+	err = json.Unmarshal([]byte(api.C.ResponseData), &ti)
 	if err != nil {
 		lib.Error.Printf("Error: %s", err)
 	}
@@ -62,7 +62,6 @@ func (api *API) GetJobTaskByName(jobName string, taskName string) (jt map[string
 }
 
 // Disable specified task
-
 func (api *API) DisableTask(name string) {
 
 }

@@ -45,8 +45,69 @@
 # Use case
 
 ##### get job list, 获取job列表
+```test
+
+api.GetJobs()
+```
 ##### get job by name, 根据名称获取job
+```test
+api.GetJobs("snake")
+```
 ##### get task list, 获取task列表
+```test
+api.GetJobTasks()
+```
 ##### get task by name, 根据名称获取task
+```test
+api.GetJobTaskByName()
+```
 ##### build, 构建task
+```test
+	api := jenkins.API{
+		JenkinsUser:  os.Getenv("JENKINS_API_USER"),
+		JenkinsToken: os.Getenv("JENKINS_API_TOKEN"),
+		JenkinsHost:  os.Getenv("JENKINS_HOST"),
+	}
+	api.StartBuild("snake", "fuck")
+```
 ##### build with parameters, 带参数构建
+
+```test
+	api := jenkins.API{
+		JenkinsUser:  os.Getenv("JENKINS_API_USER"),
+		JenkinsToken: os.Getenv("JENKINS_API_TOKEN"),
+		JenkinsHost:  os.Getenv("JENKINS_HOST"),
+	}
+	para := map[string]string{
+		"name": "chenlin",
+		"age":  "18",
+		"sex":  "male",
+	}
+	api.StartBuild("snake", "fuck")
+	api.StartBuildWithParameters("snake", "fuck_args", para)
+```
+
+##### start build, 开始构建 
+
+```
+api.StartBuild()
+```
+
+##### start build with parameters, 开始构建 
+
+```
+api.StartBuildWithParameters()
+```
+
+#### stop build, 终止构建
+
+```
+api.StopBuild()
+```
+
+#### build status, 获取构建状态
+
+```
+api.GetBuildByNumber()
+
+```

@@ -9,18 +9,19 @@ import (
 )
 
 type Call struct {
-	Url          string
-	Header       map[string]string
-	ReturnData   string
-	Username     string
-	Password     string
-	PostData     interface{}
-	c            http.Client
-	ResponseCode int
+	Url            string
+	Header         map[string]string
+	Username       string
+	Password       string
+	PostData       interface{}
+	C              http.Client
+	ResponseStatus string
+	ResponseHeader http.Header
+	ResponseData   string
 }
 
 func (call *Call) HttpGet() {
-	client := call.c
+	client := call.C
 	req, err := http.NewRequest("GET", call.Url, nil)
 	if err != nil {
 		Error.Println("Fatal Error:", err.Error())
@@ -46,11 +47,15 @@ func (call *Call) HttpGet() {
 		Error.Println("Get response error", err)
 		os.Exit(0)
 	}
-	call.ReturnData = string(body)
+	call.ResponseData = string(body)
+	call.ResponseStatus = response.Status
+	call.ResponseHeader = response.Header
+	Info.Println("[GET] response status:", response.Status)
+	Info.Println("[GET] response header:", response.Header)
 }
 
 func (call *Call) HttpPost() {
-	client := call.c
+	client := call.C
 	var jsonStr []byte
 	if call.PostData == nil {
 		Info.Println("you post without any data")
@@ -81,7 +86,9 @@ func (call *Call) HttpPost() {
 		Error.Println("Get response error", err)
 		os.Exit(0)
 	}
-	Info.Println("response status:", response.Status)
-	Info.Println("response header:", response.Header)
-	call.ReturnData = string(body)
+	Info.Println("[POST] response status:", response.Status)
+	Info.Println("[POST] response header:", response.Header)
+	call.ResponseStatus = response.Status
+	call.ResponseHeader = response.Header
+	call.ResponseData = string(body)
 }

@@ -2,6 +2,7 @@ package jenkins
 
 import (
 	"lib"
+	"strconv"
 )
 
 type Parameters struct {
@@ -63,36 +64,50 @@ func (api *API) WrapBuildWithParametersUrl(jobName string, taskName string, para
 	return
 }
 
-// start build a job
-func (api *API) StartBuild(jobName string, taskName string, args ...interface{}) (content string) {
+// 开始构建
+func (api *API) StartBuild(jobName string, taskName string, args ...interface{}) {
 	url := api.GetBuildUrl(jobName, taskName, false)
 	lib.Info.Printf("request build url: %s", url)
 	header := map[string]string{}
-	content = api.ApiCall(url, "POST", header, args)
-	return
+	api.ApiCall(url, "POST", header, args)
 }
 
-func (api *API) StartBuildWithParameters(jobName string, taskName string, parameters map[string]string) (content string) {
+// 开始构建（带参数）
+func (api *API) StartBuildWithParameters(jobName string, taskName string, parameters map[string]string) {
 	// StartBuild()是实现带参数build的一种方式，这是另一种方式
 	url := api.WrapBuildWithParametersUrl(jobName, taskName, parameters)
 	lib.Info.Printf("request build with parameters url: %s", url)
 	header := map[string]string{}
-	content = api.ApiCall(url, "POST", header)
+	api.ApiCall(url, "POST", header)
+}
+
+func (api *API) GetStopBuildUrl(jobName string, taskName string, taskNumber int) (url string) {
+	jobTask, _ := api.GetJobTaskByName(jobName, taskName)
+	task := jobTask["task"]
+	url = task.(TaskDetail).Url + strconv.Itoa(taskNumber) + "/stop"
 	return
 }
 
-func (api *API) StopBuild() {
-
+func (api *API) GetBuildStatusUrl(jobName string, taskName string, taskNumber int) (url string) {
+	jobTask, _ := api.GetJobTaskByName(jobName, taskName)
+	task := jobTask["task"]
+	url = task.(TaskDetail).Url + strconv.Itoa(taskNumber) + "/api/json"
+	return
 }
 
-func (api *API) GetBuildsFromQueue() {
-
+// 终止构建
+func (api *API) StopBuild(jobName string, taskName string, taskNumber int) {
+	url := api.GetStopBuildUrl(jobName, taskName, taskNumber)
+	lib.Info.Printf("request stop build url: %s", url)
+	header := map[string]string{}
+	api.ApiCall(url, "POST", header)
 }
 
-func (api *API) CancelBuildFromQueue() {
-
+// 获取构建状态
+func (api *API) GetBuildByNumber(jobName string, taskName string, taskNumber int) {
+	url := api.GetBuildStatusUrl(jobName, taskName, taskNumber)
+	lib.Info.Printf("request build status url: %s", url)
+	header := map[string]string{}
+	api.ApiCall(url, "GET", header)
 }
 
-func (api *API) GetBuildByNumber() {
-
-}

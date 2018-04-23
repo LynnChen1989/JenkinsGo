@@ -7,30 +7,29 @@ type API struct {
 	JenkinsUser  string
 	JenkinsToken string
 	JenkinsHost  string
+	C            lib.Call
 }
 
-func (api *API) ApiCall(url string, method string, header map[string]string, args ...interface{}) (content string) {
-	call := lib.Call{
+func (api *API) ApiCall(url string, method string, header map[string]string, args ...interface{}) {
+	api.C = lib.Call{
 		Url:      url,
 		Header:   header,
 		Username: api.JenkinsUser,
 		Password: api.JenkinsToken,
 	}
 	if method == "GET" {
-		call.HttpGet()
+		api.C.HttpGet()
 	} else if method == "POST" {
 		for _, arg := range args {
 			switch arg.(type) {
 			case Parameters:
-				call.PostData = args
+				api.C.PostData = args
 			default:
 				lib.Error.Printf("I dont kown what fuck type.\n")
 			}
 		}
-		call.HttpPost()
+		api.C.HttpPost()
 	} else {
 		panic("not supported http request method")
 	}
-	content = call.ReturnData
-	return
 }
